@@ -20,6 +20,8 @@ public class Fenetre extends Canvas implements KeyListener {
 
     ArrayList<Balle> listeBalles = new ArrayList<>();
     ArrayList<Sprite> listeSprites = new ArrayList<>();
+    ArrayList<Brique> listeBriques = new ArrayList<>();
+
     Barre barre;
 
     Fenetre()  throws InterruptedException {
@@ -63,6 +65,7 @@ public class Fenetre extends Canvas implements KeyListener {
                 int x = offsetX + col * (briqueLargeur + padding);
                 int y = offsetY + row * (briqueHauteur + padding);
                 Brique brique = new Brique(x, y, briqueLargeur, briqueHauteur, Color.GRAY);
+                listeBriques.add(brique);
                 listeSprites.add(brique);
             }
         }
@@ -88,12 +91,14 @@ public class Fenetre extends Canvas implements KeyListener {
 
             //----- app -----
             for(Balle b : listeBalles) {
-                b.deplacement(barre);
+                b.deplacement(barre,listeBriques);
             }
 
             for(Sprite s : listeSprites) {
                 s.dessiner(dessin);
             }
+
+            listeSprites.removeIf(sprite -> sprite instanceof Brique && !listeBriques.contains(sprite));
 
 
             if(toucheEspace) {

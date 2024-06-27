@@ -3,6 +3,8 @@ package models;
 import application.Fenetre;
 
 import java.awt.*;
+import java.util.Iterator;
+import java.util.List;
 
 public class Balle extends Sprite{
 
@@ -27,7 +29,7 @@ public class Balle extends Sprite{
         this.vitesseY = 5;
     }
 
-    public void deplacement(Barre barre) {
+    public void deplacement(Barre barre,  List<Brique> briques) {
 
         if(x > Fenetre.LARGEUR - diametre || x < 0) {
             vitesseX = - vitesseX;
@@ -37,10 +39,23 @@ public class Balle extends Sprite{
             vitesseY = - vitesseY;
         }
 
+        Rectangle balleRectangle = new Rectangle(x, y, diametre, diametre, couleur);
+
         // collision avec barre
         if (y + diametre >= barre.y && y + diametre <= barre.y + barre.hauteur) {
             if (x + diametre >= barre.x && x <= barre.x + barre.largeur) {
                 vitesseY = -vitesseY;
+            }
+        }
+
+
+        Iterator<Brique> iterator = briques.iterator();
+        while (iterator.hasNext()) {
+            Brique brique = iterator.next();
+            Rectangle briqueRectangle = new Rectangle(brique.getX(), brique.getY(), brique.getLargeur(), brique.getHauteur(), brique.getCouleur());
+            if (balleRectangle.intersects(briqueRectangle)) {
+                vitesseY = -vitesseY;
+                iterator.remove();
             }
         }
 
